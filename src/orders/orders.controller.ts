@@ -5,7 +5,7 @@ import {
   Body,
   Param,
   Inject,
-  ParseIntPipe,
+  ParseUUIDPipe,
 } from '@nestjs/common';
 
 import { ORDER_SERVICE } from '../config/injection-tokens';
@@ -22,6 +22,7 @@ export class OrdersController {
   create(@Body() createOrderDto: unknown) {
     return this.ordersService.send('createOrder', createOrderDto).pipe(
       catchError((error) => {
+        console.log(error);
         throw new RpcException(error);
       }),
     );
@@ -37,7 +38,7 @@ export class OrdersController {
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
+  findOne(@Param('id', ParseUUIDPipe) id: string) {
     return this.ordersService.send('findOneOrder', { id }).pipe(
       catchError((error) => {
         throw new RpcException(error);
